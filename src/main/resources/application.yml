@@ -13,12 +13,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
+
+  sql:
+    init:
+      mode: always
 
   # Ensure WebSockets and STOMP endpoints route properly in hosted environments
   web:
