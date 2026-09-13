@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: kizuna-postgres
+    environment:
+      POSTGRES_DB: kizuna_db
+      POSTGRES_USER: kizuna_user
+      POSTGRES_PASSWORD: kizuna_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
