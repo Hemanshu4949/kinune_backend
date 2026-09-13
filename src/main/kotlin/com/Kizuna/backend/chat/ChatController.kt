@@ -2,8 +2,8 @@ package com.Kizuna.backend.chat
 
 import com.Kizuna.backend.chat.dto.ChatSummaryDto
 import com.Kizuna.backend.message.dto.MessageDto
+import com.Kizuna.backend.message.MessageService
 import com.Kizuna.backend.message.dto.SendMessagePayload
-import com.kizuna.backend.message.MessageService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
