@@ -1,4 +1,4 @@
-package com.kizuna.backend.message
+package com.Kizuna.backend.message
 
 
 import com.Kizuna.backend.message.dto.MessageDto
