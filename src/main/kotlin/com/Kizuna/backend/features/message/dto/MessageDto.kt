@@ -2,7 +2,6 @@ package com.kizuna.backend.features.message.dto
 
 import com.kizuna.backend.features.message.MessageEntity
 import com.kizuna.backend.features.message.MessageType
-import java.time.Instant
 import java.util.UUID
 
 data class MessageDto(
@@ -13,7 +12,7 @@ data class MessageDto(
     val content: String?,
     val mediaUrl: String?,
     val metadata: Map<String, Any>?,
-    val createdAt: Instant,
+    val createdAt: String,
     val isOutgoing: Boolean
 ) {
     companion object {
@@ -26,7 +25,7 @@ data class MessageDto(
                 content = entity.content,
                 mediaUrl = entity.mediaUrl,
                 metadata = entity.metadata,
-                createdAt = entity.createdAt,
+                createdAt = entity.createdAt.toString(),
                 isOutgoing = entity.senderId == currentUserId
             )
         }

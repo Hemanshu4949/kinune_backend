@@ -12,12 +12,10 @@ import java.util.UUID
 @Service
 class MessageService(
     private val messageRepository: MessageRepository,
-    private val messagingTemplate: SimpMessagingTemplate // <-- Injected for WebSockets
+    private val messagingTemplate: SimpMessagingTemplate
 ) {
-
     @Transactional
     fun sendMessage(payload: SendMessagePayload, currentUserId: UUID): MessageDto {
-
         val message = MessageEntity(
             id = UuidCreator.getTimeOrderedEpoch(),
             chatId = payload.chatId,
@@ -32,9 +30,7 @@ class MessageService(
         val savedMessage = messageRepository.save(message)
         val messageDto = MessageDto.fromEntity(savedMessage, currentUserId)
 
-        // Dispatch real-time WebSocket event to the specific chat room's topic
         messagingTemplate.convertAndSend("/topic/chat.${payload.chatId}", messageDto)
-
         return messageDto
     }
 }
