@@ -1,6 +1,6 @@
-package com.Kizuna.backend.features.user
+package com.kizuna.backend.features.user
 
-import com.Kizuna.backend.features.user.dto.UserDto
+import com.kizuna.backend.features.user.dto.UserDto
 import org.springframework.stereotype.Service
 import java.util.UUID
 

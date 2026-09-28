@@ -1,7 +1,7 @@
-package com.Kizuna.backend.features.message.dto
+package com.kizuna.backend.features.message.dto
 
-import com.Kizuna.backend.features.message.MessageEntity
-import com.Kizuna.backend.features.message.MessageType
+import com.kizuna.backend.features.message.MessageEntity
+import com.kizuna.backend.features.message.MessageType
 import java.time.Instant
 import java.util.UUID
 

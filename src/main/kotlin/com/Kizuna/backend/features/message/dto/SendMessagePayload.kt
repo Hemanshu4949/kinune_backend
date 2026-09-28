@@ -1,6 +1,6 @@
-package com.Kizuna.backend.features.message.dto
+package com.kizuna.backend.features.message.dto
 
-import com.Kizuna.backend.features.message.MessageType
+import com.kizuna.backend.features.message.MessageType
 import java.util.UUID
 
 data class SendMessagePayload(

@@ -1,6 +1,6 @@
-package com.Kizuna.backend.features.user
+package com.kizuna.backend.features.user
 
-import com.Kizuna.backend.features.user.dto.UserDto
+import com.kizuna.backend.features.user.dto.UserDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping

@@ -1,4 +1,4 @@
-package com.Kizuna.backend.core.common.config
+package com.kizuna.backend.core.common.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry

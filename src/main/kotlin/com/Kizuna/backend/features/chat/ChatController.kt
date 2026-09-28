@@ -1,7 +1,7 @@
-package com.Kizuna.backend.features.chat
+package com.kizuna.backend.features.chat
 
-import com.Kizuna.backend.features.chat.dto.ChatSummaryDto
-import com.Kizuna.backend.features.chat.dto.CreateGroupPayload
+import com.kizuna.backend.features.chat.dto.ChatSummaryDto
+import com.kizuna.backend.features.chat.dto.CreateGroupPayload
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping

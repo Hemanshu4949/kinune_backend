@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.message
+package com.kizuna.backend.features.message
 
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode

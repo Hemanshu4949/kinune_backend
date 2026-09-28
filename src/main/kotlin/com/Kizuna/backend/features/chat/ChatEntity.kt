@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.chat
+package com.kizuna.backend.features.chat
 
 import jakarta.persistence.*
 import java.time.Instant

@@ -1,13 +1,12 @@
-package com.Kizuna.backend.features.message
+package com.kizuna.backend.features.message
 
-import com.Kizuna.backend.features.chat.ChatRepository
-import com.Kizuna.backend.features.message.dto.MessageDto
-import com.Kizuna.backend.features.message.dto.SendMessagePayload
-import com.Kizuna.backend.features.user.UserRepository
+import com.kizuna.backend.features.message.dto.MessageDto
+import com.kizuna.backend.features.message.dto.SendMessagePayload
 import com.github.f4b6a3.uuid.UuidCreator
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.UUID
 
 @Service
@@ -27,7 +26,7 @@ class MessageService(
             content = payload.content,
             mediaUrl = payload.mediaUrl,
             metadata = payload.metadata,
-            createdAt = java.time.Instant.now()
+            createdAt = Instant.now()
         )
 
         val savedMessage = messageRepository.save(message)

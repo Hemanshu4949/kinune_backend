@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.chat
+package com.kizuna.backend.features.chat
 
 import jakarta.persistence.*
 import java.io.Serializable
@@ -16,15 +16,15 @@ data class ChatParticipantId(
 class ChatParticipantEntity(
     @Id
     @Column(name = "chat_id", nullable = false, updatable = false)
-    val chatId: UUID,
+    var chatId: UUID,
 
     @Id
     @Column(name = "user_id", nullable = false, updatable = false)
-    val userId: UUID,
+    var userId: UUID,
 
     @Column(name = "last_read_message_id")
     var lastReadMessageId: UUID? = null,
 
     @Column(name = "joined_at", nullable = false, updatable = false)
-    val joinedAt: Instant = Instant.now()
+    var joinedAt: Instant = Instant.now()
 )

@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.user
+package com.kizuna.backend.features.user
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

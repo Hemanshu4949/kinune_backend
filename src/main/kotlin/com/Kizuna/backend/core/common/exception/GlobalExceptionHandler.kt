@@ -1,4 +1,4 @@
-package com.Kizuna.backend.core.common.exception
+package com.kizuna.backend.core.common.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

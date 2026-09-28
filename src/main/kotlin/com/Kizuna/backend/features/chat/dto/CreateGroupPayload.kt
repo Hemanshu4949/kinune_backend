@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.chat.dto
+package com.kizuna.backend.features.chat.dto
 
 import java.util.UUID
 

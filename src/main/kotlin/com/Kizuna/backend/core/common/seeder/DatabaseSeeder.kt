@@ -1,13 +1,13 @@
-package com.Kizuna.backend.core.common.seeder
+package com.kizuna.backend.core.common.seeder
 
-import com.Kizuna.backend.features.chat.ChatService
-import com.Kizuna.backend.features.chat.ChatRepository
-import com.Kizuna.backend.features.chat.ChatParticipantRepository
-import com.Kizuna.backend.features.message.MessageEntity
-import com.Kizuna.backend.features.message.MessageRepository
-import com.Kizuna.backend.features.message.MessageType
-import com.Kizuna.backend.features.user.UserEntity
-import com.Kizuna.backend.features.user.UserRepository
+import com.kizuna.backend.features.chat.ChatService
+import com.kizuna.backend.features.chat.ChatRepository
+import com.kizuna.backend.features.chat.ChatParticipantRepository
+import com.kizuna.backend.features.message.MessageEntity
+import com.kizuna.backend.features.message.MessageRepository
+import com.kizuna.backend.features.message.MessageType
+import com.kizuna.backend.features.user.UserEntity
+import com.kizuna.backend.features.user.UserRepository
 import com.github.f4b6a3.uuid.UuidCreator
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component

@@ -1,4 +1,4 @@
-package com.Kizuna.backend.features.user.dto
+package com.kizuna.backend.features.user.dto
 
 import java.util.UUID
 

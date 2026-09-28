@@ -1,12 +1,14 @@
-package com.Kizuna.backend.features.chat
+package com.kizuna.backend.features.chat
 
-import com.Kizuna.backend.features.chat.dto.ChatSummaryDto
-import com.Kizuna.backend.features.message.MessageRepository
-import com.Kizuna.backend.features.message.dto.MessageDto
-import com.Kizuna.backend.features.user.UserRepository
+import com.kizuna.backend.features.chat.dto.ChatSummaryDto
+import com.kizuna.backend.features.message.MessageRepository
+import com.kizuna.backend.features.message.dto.MessageDto
+import com.kizuna.backend.features.user.UserRepository
+import com.github.f4b6a3.uuid.UuidCreator
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.UUID
 
 @Service
@@ -50,7 +52,7 @@ class ChatService(
             type = ChatType.DIRECT,
             title = null,
             avatarUrl = null,
-            createdAt = java.time.Instant.now()
+            createdAt = Instant.now()
         )
         val savedChat = chatRepository.save(newChat)
 
@@ -59,13 +61,13 @@ class ChatService(
             chatId = savedChat.id,
             userId = userA,
             lastReadMessageId = null,
-            joinedAt = java.time.Instant.now()
+            joinedAt = Instant.now()
         )
         val participantB = ChatParticipantEntity(
             chatId = savedChat.id,
             userId = userB,
             lastReadMessageId = null,
-            joinedAt = java.time.Instant.now()
+            joinedAt = Instant.now()
         )
         chatParticipantRepository.saveAll(listOf(participantA, participantB))
 
@@ -75,7 +77,7 @@ class ChatService(
     @Transactional
     fun getMessagesForChat(chatId: UUID, userId: UUID, cursor: UUID?, limit: Int): List<MessageDto> {
         val pageRequest = PageRequest.of(0, limit)
-        val searchCursor = cursor ?: com.github.f4b6a3.uuid.UuidCreator.getTimeOrderedEpoch()
+        val searchCursor = cursor ?: UuidCreator.getTimeOrderedEpoch()
         
         val messages = messageRepository.findMessagesBeforeCursor(chatId, searchCursor, pageRequest)
 
@@ -104,7 +106,7 @@ class ChatService(
             type = ChatType.GROUP,
             title = title,
             avatarUrl = avatarUrl,
-            createdAt = java.time.Instant.now()
+            createdAt = Instant.now()
         )
         val savedChat = chatRepository.save(newChat)
 
@@ -114,7 +116,7 @@ class ChatService(
                 chatId = savedChat.id,
                 userId = userId,
                 lastReadMessageId = null,
-                joinedAt = java.time.Instant.now()
+                joinedAt = Instant.now()
             )
         }
         chatParticipantRepository.saveAll(participants)

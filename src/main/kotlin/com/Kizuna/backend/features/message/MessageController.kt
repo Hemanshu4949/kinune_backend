@@ -1,8 +1,8 @@
-package com.Kizuna.backend.features.message
+package com.kizuna.backend.features.message
 
-import com.Kizuna.backend.features.chat.ChatService
-import com.Kizuna.backend.features.message.dto.MessageDto
-import com.Kizuna.backend.features.message.dto.SendMessagePayload
+import com.kizuna.backend.features.chat.ChatService
+import com.kizuna.backend.features.message.dto.MessageDto
+import com.kizuna.backend.features.message.dto.SendMessagePayload
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
