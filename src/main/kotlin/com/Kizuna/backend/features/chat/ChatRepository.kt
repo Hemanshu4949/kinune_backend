@@ -55,7 +55,7 @@ interface ChatRepository : JpaRepository<ChatEntity, UUID> {
     """, nativeQuery = true)
     fun findChatSummariesForUser(@Param("userId") userId: UUID): List<ChatSummaryProjection>
 }
-
+// adding a comment for account checking
 interface ChatSummaryProjection {
     fun getChatId(): UUID
     fun getType(): String
