@@ -22,7 +22,7 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never
 
   # Ensure WebSockets and STOMP endpoints route properly in hosted environments
   web:
