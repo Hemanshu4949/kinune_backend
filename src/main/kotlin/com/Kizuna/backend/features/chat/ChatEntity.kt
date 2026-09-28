@@ -1,6 +1,8 @@
 package com.kizuna.backend.features.chat
 
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.Instant
 import java.util.UUID
 
@@ -16,6 +18,7 @@ class ChatEntity(
     var id: UUID = UUID.randomUUID(),
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM) // <-- Add this line
     @Column(name = "type", nullable = false)
     var type: ChatType = ChatType.DIRECT,
 
