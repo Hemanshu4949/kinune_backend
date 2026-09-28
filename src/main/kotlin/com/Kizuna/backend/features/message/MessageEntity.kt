@@ -3,6 +3,7 @@ package com.kizuna.backend.features.message
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import java.sql.Types
 import java.time.Instant
 import java.util.UUID
 
@@ -24,6 +25,7 @@ class MessageEntity(
     val senderId: UUID?,
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM) // <-- Add this line
     @Column(name = "type", nullable = false)
     val type: MessageType,
 
