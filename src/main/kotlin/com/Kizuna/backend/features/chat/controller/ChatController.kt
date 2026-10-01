@@ -1,5 +1,6 @@
-package com.kizuna.backend.features.chat
+package com.kizuna.backend.features.chat.controller
 
+import com.kizuna.backend.features.chat.ChatService
 import com.kizuna.backend.features.chat.dto.ChatSummaryDto
 import com.kizuna.backend.features.chat.dto.CreateGroupPayload
 import org.springframework.http.ResponseEntity
@@ -48,3 +49,4 @@ class ChatController(
         return ResponseEntity.ok(mapOf("chatId" to chatId))
     }
 }
+

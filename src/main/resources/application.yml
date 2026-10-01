@@ -29,3 +29,11 @@ spring:
     resources:
       chain:
         cache: false
+
+backblaze:
+  b2:
+    key-id: ${B2_KEY_ID:placeholder_key_id}
+    application-key: ${B2_APPLICATION_KEY:placeholder_application_key}
+    bucket-name: ${B2_BUCKET_NAME:kizuna-bucket}
+    endpoint: ${B2_ENDPOINT:https://s3.us-east-005.backblazeb2.com}
+    region: ${B2_REGION:us-east-1}

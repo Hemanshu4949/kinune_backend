@@ -26,6 +26,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.github.f4b6a3:uuid-creator:5.3.7")
+    
+    // AWS S3 for Backblaze B2
+    implementation("software.amazon.awssdk:s3:2.25.11")
+    
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

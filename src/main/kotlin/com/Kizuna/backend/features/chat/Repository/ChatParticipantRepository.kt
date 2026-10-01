@@ -1,5 +1,7 @@
-package com.kizuna.backend.features.chat
+package com.kizuna.backend.features.chat.Repository
 
+import com.kizuna.backend.features.chat.entity.ChatParticipantEntity
+import com.kizuna.backend.features.chat.entity.ChatParticipantId
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

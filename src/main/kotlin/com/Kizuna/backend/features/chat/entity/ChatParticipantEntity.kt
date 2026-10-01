@@ -1,4 +1,4 @@
-package com.kizuna.backend.features.chat
+package com.kizuna.backend.features.chat.entity
 
 import jakarta.persistence.*
 import java.io.Serializable

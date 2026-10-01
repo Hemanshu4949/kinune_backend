@@ -1,8 +1,8 @@
 package com.kizuna.backend.core.common.seeder
 
 import com.kizuna.backend.features.chat.ChatService
-import com.kizuna.backend.features.chat.ChatRepository
-import com.kizuna.backend.features.chat.ChatParticipantRepository
+import com.kizuna.backend.features.chat.Repository.ChatRepository
+import com.kizuna.backend.features.chat.Repository.ChatParticipantRepository
 import com.kizuna.backend.features.message.MessageEntity
 import com.kizuna.backend.features.message.MessageRepository
 import com.kizuna.backend.features.message.MessageType

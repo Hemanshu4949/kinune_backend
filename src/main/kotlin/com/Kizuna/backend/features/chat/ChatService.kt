@@ -5,6 +5,11 @@ import com.kizuna.backend.features.message.MessageRepository
 import com.kizuna.backend.features.message.dto.MessageDto
 import com.kizuna.backend.features.user.UserRepository
 import com.github.f4b6a3.uuid.UuidCreator
+import com.kizuna.backend.features.chat.Repository.ChatParticipantRepository
+import com.kizuna.backend.features.chat.Repository.ChatRepository
+import com.kizuna.backend.features.chat.entity.ChatEntity
+import com.kizuna.backend.features.chat.entity.ChatParticipantEntity
+import com.kizuna.backend.features.chat.entity.ChatType
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -78,7 +83,7 @@ class ChatService(
     fun getMessagesForChat(chatId: UUID, userId: UUID, cursor: UUID?, limit: Int): List<MessageDto> {
         val pageRequest = PageRequest.of(0, limit)
         val searchCursor = cursor ?: UuidCreator.getTimeOrderedEpoch()
-        
+
         val messages = messageRepository.findMessagesBeforeCursor(chatId, searchCursor, pageRequest)
 
         if (cursor == null && messages.isNotEmpty()) {
