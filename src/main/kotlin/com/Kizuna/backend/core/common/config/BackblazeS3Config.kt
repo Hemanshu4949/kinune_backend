@@ -18,7 +18,15 @@ class BackblazeS3Config(
     @Value("\${backblaze.b2.endpoint}") private val endpoint: String,
     @Value("\${backblaze.b2.region}") private val regionString: String
 ) {
-    
+    private fun getSafeEndpoint(): URI {
+        val safeEndpoint = if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+            endpoint
+        } else {
+            "https://$endpoint"
+        }
+        return URI.create(safeEndpoint)
+    }
+
     @Bean
     fun s3Client(): S3Client {
         val credentials = AwsBasicCredentials.create(keyId, applicationKey)
@@ -26,7 +34,7 @@ class BackblazeS3Config(
         return S3Client.builder()
             .credentialsProvider(StaticCredentialsProvider.create(credentials))
             .region(region)
-            .endpointOverride(URI.create(endpoint))
+            .endpointOverride(getSafeEndpoint())
             .build()
     }
 
@@ -37,8 +45,7 @@ class BackblazeS3Config(
         return S3Presigner.builder()
             .credentialsProvider(StaticCredentialsProvider.create(credentials))
             .region(region)
-            .endpointOverride(URI.create(endpoint))
+            .endpointOverride(getSafeEndpoint())
             .build()
     }
-
 }
