@@ -16,14 +16,22 @@ data class MessageDto(
     val isOutgoing: Boolean
 ) {
     companion object {
-        fun fromEntity(entity: MessageEntity, currentUserId: UUID): MessageDto {
+        fun fromEntity(
+            entity: MessageEntity, 
+            currentUserId: UUID,
+            mediaStorageService: com.kizuna.backend.features.chat.MediaStorageService? = null
+        ): MessageDto {
+            val resolvedMediaUrl = entity.mediaUrl?.let { url ->
+                mediaStorageService?.generatePreSignedGetUrl(url) ?: url
+            }
+            
             return MessageDto(
                 id = entity.id,
                 chatId = entity.chatId,
                 senderId = entity.senderId,
                 type = entity.type,
                 content = entity.content,
-                mediaUrl = entity.mediaUrl,
+                mediaUrl = resolvedMediaUrl,
                 metadata = entity.metadata,
                 createdAt = entity.createdAt.toString(),
                 isOutgoing = entity.senderId == currentUserId

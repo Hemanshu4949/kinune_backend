@@ -34,14 +34,25 @@ class MediaStorageService(
         val presignedRequest = s3Presigner.presignPutObject(presignRequest)
         val presignedUrl = presignedRequest.url().toString()
         
-        // Transform https://s3.us-east-005.backblazeb2.com to https://f005.backblazeb2.com
-        val publicEndpoint = endpoint.replace("s3.us-east-0", "f0")
-        val publicUrl = "$publicEndpoint/file/$bucketName/$key"
-        
         return MediaUploadDto(
             presignedUrl = presignedUrl,
-            publicUrl = publicUrl,
+            publicUrl = key,
             contentType = contentType
         )
+    }
+
+    fun generatePreSignedGetUrl(objectKey: String): String {
+        val getObjectRequest = software.amazon.awssdk.services.s3.model.GetObjectRequest.builder()
+            .bucket(bucketName)
+            .key(objectKey)
+            .build()
+            
+        val presignRequest = software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest.builder()
+            .signatureDuration(Duration.ofDays(7))
+            .getObjectRequest(getObjectRequest)
+            .build()
+            
+        val presignedRequest = s3Presigner.presignGetObject(presignRequest)
+        return presignedRequest.url().toString()
     }
 }

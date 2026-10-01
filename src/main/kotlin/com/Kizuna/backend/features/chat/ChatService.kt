@@ -21,7 +21,8 @@ class ChatService(
     private val chatRepository: ChatRepository,
     private val chatParticipantRepository: ChatParticipantRepository,
     private val messageRepository: MessageRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val mediaStorageService: MediaStorageService
 ) {
 
     @Transactional(readOnly = true)
@@ -91,7 +92,7 @@ class ChatService(
             chatParticipantRepository.updateLastReadMessageId(chatId, userId, newestMessageId)
         }
 
-        return messages.map { MessageDto.fromEntity(it, userId) }
+        return messages.map { MessageDto.fromEntity(it, userId, mediaStorageService) }
     }
 
     @Transactional

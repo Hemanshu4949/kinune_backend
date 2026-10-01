@@ -12,7 +12,8 @@ import java.util.UUID
 @Service
 class MessageService(
     private val messageRepository: MessageRepository,
-    private val messagingTemplate: SimpMessagingTemplate
+    private val messagingTemplate: SimpMessagingTemplate,
+    private val mediaStorageService: com.kizuna.backend.features.chat.MediaStorageService
 ) {
     @Transactional
     fun sendMessage(payload: SendMessagePayload, currentUserId: UUID): MessageDto {
@@ -28,7 +29,7 @@ class MessageService(
         )
 
         val savedMessage = messageRepository.save(message)
-        val messageDto = MessageDto.fromEntity(savedMessage, currentUserId)
+        val messageDto = MessageDto.fromEntity(savedMessage, currentUserId, mediaStorageService)
 
         messagingTemplate.convertAndSend("/topic/chat.${payload.chatId}", messageDto)
         return messageDto
