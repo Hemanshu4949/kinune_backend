@@ -16,17 +16,17 @@ class MessageController(
 ) {
 
     // 1. REST: Fetch Message History via Keyset Pagination
-    // GET /api/messages/chat/123-456?currentUserId=789&cursor=...
     @GetMapping("/api/messages/chat/{chatId}")
     fun getMessageHistory(
         @PathVariable chatId: UUID,
         @RequestParam currentUserId: UUID,
-        @RequestParam(required = false) cursor: UUID?,
+        @RequestParam(required = false) aroundMessageId: UUID?,
+        @RequestParam(required = false) beforeCursor: UUID?,
+        @RequestParam(required = false) afterCursor: UUID?,
         @RequestParam(defaultValue = "40") limit: Int
-    ): ResponseEntity<List<MessageDto>> {
-        // Calls ChatService because it handles the unread watermark reset logic
-        val messages = chatService.getMessagesForChat(chatId, currentUserId, cursor, limit)
-        return ResponseEntity.ok(messages)
+    ): ResponseEntity<com.kizuna.backend.features.message.dto.PaginatedMessagesResponse> {
+        val response = chatService.getMessagesForChat(chatId, currentUserId, aroundMessageId, beforeCursor, afterCursor, limit)
+        return ResponseEntity.ok(response)
     }
 
     // 2. REST: Fallback HTTP endpoint for sending messages (Useful for Postman testing)
