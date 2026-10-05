@@ -4,7 +4,6 @@ import com.kizuna.backend.features.chat.dto.ChatSummaryDto
 import com.kizuna.backend.features.message.MessageRepository
 import com.kizuna.backend.features.message.dto.MessageDto
 import com.kizuna.backend.features.user.UserRepository
-import com.github.f4b6a3.uuid.UuidCreator
 import com.kizuna.backend.features.chat.Repository.ChatParticipantRepository
 import com.kizuna.backend.features.chat.Repository.ChatRepository
 import com.kizuna.backend.features.chat.entity.ChatEntity
@@ -81,18 +80,83 @@ class ChatService(
     }
 
     @Transactional
-    fun getMessagesForChat(chatId: UUID, userId: UUID, cursor: UUID?, limit: Int): List<MessageDto> {
-        val pageRequest = PageRequest.of(0, limit)
-        val searchCursor = cursor ?: UuidCreator.getTimeOrderedEpoch()
+    fun getMessagesForChat(
+        chatId: UUID, 
+        userId: UUID, 
+        aroundMessageId: UUID?, 
+        beforeCursor: UUID?, 
+        afterCursor: UUID?, 
+        limit: Int
+    ): com.kizuna.backend.features.message.dto.PaginatedMessagesResponse {
+        var messages = emptyList<com.kizuna.backend.features.message.MessageEntity>()
+        var hasMoreOlder = false
+        var hasMoreNewer = false
 
-        val messages = messageRepository.findMessagesBeforeCursor(chatId, searchCursor, pageRequest)
+        when {
+            aroundMessageId != null -> {
+                val targetMessage = messageRepository.findById(aroundMessageId)
+                if (targetMessage.isPresent) {
+                    val createdAt = targetMessage.get().createdAt
+                    val olderLimit = limit / 2
+                    val newerLimit = limit - olderLimit
+                    
+                    val older = messageRepository.findOlderMessages(chatId, createdAt, PageRequest.of(0, olderLimit + 1))
+                    val newer = messageRepository.findNewerMessages(chatId, createdAt, PageRequest.of(0, newerLimit + 1))
+                    
+                    hasMoreOlder = older.size > olderLimit
+                    hasMoreNewer = newer.size > newerLimit
+                    
+                    val olderList = older.take(olderLimit).reversed()
+                    val newerList = newer.take(newerLimit)
+                    // Ensure the target message is included in olderList if we used <=, but since we used <= it might be the first element.
+                    // Wait, we defined findOlderMessages as <= in the previous step, so it INCLUDES the target message.
+                    messages = olderList + newerList
+                }
+            }
+            beforeCursor != null -> {
+                val targetMessage = messageRepository.findById(beforeCursor)
+                if (targetMessage.isPresent) {
+                    // To fetch older, we must ensure we don't include the cursor itself if findOlderMessages uses <=.
+                    // But actually, we want strict < for pagination. Let's just filter it out in memory.
+                    val older = messageRepository.findOlderMessages(chatId, targetMessage.get().createdAt, PageRequest.of(0, limit + 2))
+                    val filteredOlder = older.filter { it.id != beforeCursor }
+                    hasMoreOlder = filteredOlder.size > limit
+                    messages = filteredOlder.take(limit).reversed()
+                    hasMoreNewer = true 
+                }
+            }
+            afterCursor != null -> {
+                val targetMessage = messageRepository.findById(afterCursor)
+                if (targetMessage.isPresent) {
+                    val newer = messageRepository.findNewerMessages(chatId, targetMessage.get().createdAt, PageRequest.of(0, limit + 1))
+                    hasMoreNewer = newer.size > limit
+                    messages = newer.take(limit)
+                    hasMoreOlder = true 
+                }
+            }
+            else -> {
+                // Default: fetch latest
+                val older = messageRepository.findOlderMessages(chatId, Instant.now(), PageRequest.of(0, limit + 1))
+                hasMoreOlder = older.size > limit
+                messages = older.take(limit).reversed()
+                hasMoreNewer = false
+            }
+        }
 
-        if (cursor == null && messages.isNotEmpty()) {
-            val newestMessageId = messages.first().id
+        if (beforeCursor == null && aroundMessageId == null && afterCursor == null && messages.isNotEmpty()) {
+            val newestMessageId = messages.last().id
             chatParticipantRepository.updateLastReadMessageId(chatId, userId, newestMessageId)
         }
 
-        return messages.map { MessageDto.fromEntity(it, userId, mediaStorageService) }
+        val messageDtos = messages.map { MessageDto.fromEntity(it, userId, mediaStorageService) }
+        
+        return com.kizuna.backend.features.message.dto.PaginatedMessagesResponse(
+            messages = messageDtos,
+            olderCursor = if (messages.isNotEmpty()) messages.first().id.toString() else null,
+            newerCursor = if (messages.isNotEmpty()) messages.last().id.toString() else null,
+            hasMoreOlder = hasMoreOlder,
+            hasMoreNewer = hasMoreNewer
+        )
     }
 
     @Transactional
@@ -128,5 +192,28 @@ class ChatService(
         chatParticipantRepository.saveAll(participants)
 
         return savedChat.id
+    }
+
+    @Transactional
+    fun updateReadReceipt(chatId: UUID, userId: UUID, lastSeenMessageId: UUID) {
+        val targetMessage = messageRepository.findById(lastSeenMessageId).orElseThrow { IllegalArgumentException("Message not found") }
+        val participant = chatParticipantRepository.findById(com.kizuna.backend.features.chat.entity.ChatParticipantId(chatId, userId))
+            .orElseThrow { IllegalArgumentException("User is not a participant in this chat") }
+
+        val currentReadMessageId = participant.lastReadMessageId
+        var shouldUpdate = false
+
+        if (currentReadMessageId == null) {
+            shouldUpdate = true
+        } else {
+            val currentReadMessage = messageRepository.findById(currentReadMessageId)
+            if (currentReadMessage.isPresent && targetMessage.createdAt.isAfter(currentReadMessage.get().createdAt)) {
+                shouldUpdate = true
+            }
+        }
+
+        if (shouldUpdate) {
+            chatParticipantRepository.updateLastReadMessageId(chatId, userId, lastSeenMessageId)
+        }
     }
 }

@@ -48,5 +48,19 @@ class ChatController(
         )
         return ResponseEntity.ok(mapOf("chatId" to chatId))
     }
+
+    @org.springframework.web.bind.annotation.PutMapping("/{chatId}/read-receipt")
+    fun updateReadReceipt(
+        @org.springframework.web.bind.annotation.PathVariable chatId: UUID,
+        @RequestParam currentUserId: UUID,
+        @RequestBody payload: ReadReceiptPayload
+    ): ResponseEntity<Void> {
+        chatService.updateReadReceipt(chatId, currentUserId, payload.lastSeenMessageId)
+        return ResponseEntity.ok().build()
+    }
 }
+
+data class ReadReceiptPayload(
+    val lastSeenMessageId: UUID
+)
 
