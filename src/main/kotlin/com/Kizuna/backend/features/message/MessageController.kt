@@ -25,7 +25,7 @@ class MessageController(
         @RequestParam(required = false) beforeCursor: UUID?,
         @RequestParam(required = false) afterCursor: UUID?,
         @RequestParam(defaultValue = "40") limit: Int
-    ): ResponseEntity<PaginatedMessagesResponse> {
+    ): ResponseEntity<PaginatedMessagesResponse?> {
         val response = chatService.getMessagesForChat(chatId, currentUserId, aroundMessageId, beforeCursor, afterCursor, limit)
         return ResponseEntity.ok(response)
     }
