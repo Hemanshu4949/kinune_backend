@@ -33,6 +33,9 @@ class UserEntity(
     @Column(name = "bio")
     var bio: String? = null,
 
+    @Column(name = "fcm_token")
+    var fcmToken: String? = null,
+
     @Column(name = "is_active", nullable = false)
     var isActive: Boolean = true,
 

@@ -25,4 +25,10 @@ class UserService(
         avatarUrl = avatarUrl,
         isActive = isActive
     )
+
+    fun updateFcmToken(userId: UUID, token: String) {
+        val user = userRepository.findById(userId).orElseThrow { IllegalArgumentException("User not found") }
+        user.fcmToken = token
+        userRepository.save(user)
+    }
 }
