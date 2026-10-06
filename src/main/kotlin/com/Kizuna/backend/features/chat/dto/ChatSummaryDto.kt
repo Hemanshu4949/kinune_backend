@@ -9,5 +9,11 @@ data class ChatSummaryDto(
     val avatarUrl: String?,
     val unreadCount: Int,
     val lastSnippet: String?,
-    val lastMessageType: String?
+    val lastMessageType: String?,
+    val participants: List<ParticipantSummaryDto> = emptyList()
+)
+
+data class ParticipantSummaryDto(
+    val id: UUID,
+    val name: String
 )

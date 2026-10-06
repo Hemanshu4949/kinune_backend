@@ -9,6 +9,8 @@ import com.kizuna.backend.features.chat.Repository.ChatRepository
 import com.kizuna.backend.features.chat.entity.ChatEntity
 import com.kizuna.backend.features.chat.entity.ChatParticipantEntity
 import com.kizuna.backend.features.chat.entity.ChatType
+import com.kizuna.backend.features.message.MessageEntity
+import com.kizuna.backend.features.message.dto.PaginatedMessagesResponse
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +28,17 @@ class ChatService(
 
     @Transactional(readOnly = true)
     fun getChatSummaries(userId: UUID): List<ChatSummaryDto> {
-        return chatRepository.findChatSummariesForUser(userId).map { projection ->
+        val projections = chatRepository.findChatSummariesForUser(userId)
+        if (projections.isEmpty()) return emptyList()
+
+        val chatIds = projections.map { it.getChatId() }
+        val participantProjections = chatParticipantRepository.findParticipantsForChats(chatIds)
+
+        val participantsByChatId = participantProjections.groupBy({ it.chatId }) { proj ->
+            com.kizuna.backend.features.chat.dto.ParticipantSummaryDto(proj.userId, proj.displayName)
+        }
+
+        return projections.map { projection ->
             ChatSummaryDto(
                 id = projection.getChatId(),
                 type = projection.getType(),
@@ -34,7 +46,8 @@ class ChatService(
                 avatarUrl = projection.getAvatarUrl(),
                 unreadCount = projection.getUnreadCount(),
                 lastSnippet = projection.getLatestMessageContent(),
-                lastMessageType = projection.getLatestMessageType()
+                lastMessageType = projection.getLatestMessageType(),
+                participants = participantsByChatId[projection.getChatId()] ?: emptyList()
             )
         }
     }
@@ -87,8 +100,8 @@ class ChatService(
         beforeCursor: UUID?, 
         afterCursor: UUID?, 
         limit: Int
-    ): com.kizuna.backend.features.message.dto.PaginatedMessagesResponse {
-        var messages = emptyList<com.kizuna.backend.features.message.MessageEntity>()
+    ): PaginatedMessagesResponse {
+        var messages = emptyList<MessageEntity>()
         var hasMoreOlder = false
         var hasMoreNewer = false
 
@@ -150,7 +163,7 @@ class ChatService(
 
         val messageDtos = messages.map { MessageDto.fromEntity(it, userId, mediaStorageService) }
         
-        return com.kizuna.backend.features.message.dto.PaginatedMessagesResponse(
+        return PaginatedMessagesResponse(
             messages = messageDtos,
             olderCursor = if (messages.isNotEmpty()) messages.first().id.toString() else null,
             newerCursor = if (messages.isNotEmpty()) messages.last().id.toString() else null,

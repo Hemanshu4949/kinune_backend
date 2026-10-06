@@ -2,6 +2,7 @@ package com.kizuna.backend.features.message
 
 import com.kizuna.backend.features.chat.ChatService
 import com.kizuna.backend.features.message.dto.MessageDto
+import com.kizuna.backend.features.message.dto.PaginatedMessagesResponse
 import com.kizuna.backend.features.message.dto.SendMessagePayload
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -24,7 +25,7 @@ class MessageController(
         @RequestParam(required = false) beforeCursor: UUID?,
         @RequestParam(required = false) afterCursor: UUID?,
         @RequestParam(defaultValue = "40") limit: Int
-    ): ResponseEntity<com.kizuna.backend.features.message.dto.PaginatedMessagesResponse> {
+    ): ResponseEntity<PaginatedMessagesResponse> {
         val response = chatService.getMessagesForChat(chatId, currentUserId, aroundMessageId, beforeCursor, afterCursor, limit)
         return ResponseEntity.ok(response)
     }

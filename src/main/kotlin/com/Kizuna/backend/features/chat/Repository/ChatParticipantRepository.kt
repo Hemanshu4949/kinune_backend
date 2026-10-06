@@ -1,5 +1,6 @@
 package com.kizuna.backend.features.chat.Repository
 
+import com.kizuna.backend.features.chat.dto.ChatParticipantProjection
 import com.kizuna.backend.features.chat.entity.ChatParticipantEntity
 import com.kizuna.backend.features.chat.entity.ChatParticipantId
 import org.springframework.data.jpa.repository.JpaRepository
@@ -21,4 +22,14 @@ interface ChatParticipantRepository : JpaRepository<ChatParticipantEntity, ChatP
         @Param("userId") userId: UUID,
         @Param("lastReadMessageId") lastReadMessageId: UUID
     ): Int
+
+    @Query("""
+        SELECT new com.kizuna.backend.features.chat.dto.ChatParticipantProjection(
+            cp.chatId, u.id, u.displayName
+        )
+        FROM ChatParticipantEntity cp
+        JOIN UserEntity u ON cp.userId = u.id
+        WHERE cp.chatId IN :chatIds
+    """)
+    fun findParticipantsForChats(@Param("chatIds") chatIds: List<UUID>): List<ChatParticipantProjection>
 }
